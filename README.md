@@ -51,6 +51,56 @@ Some prompts to answer:
 
 You can include a simple diagram or bullet list if helpful.
 
+### Finalized Algorithm Recipe
+
+For each song, the recommender computes a total score and then ranks songs from highest to lowest.
+
+1. Start score at `0.0`.
+2. Add categorical match points:
+  - `+1.5` if `song.genre == user.favorite_genre`
+  - `+2.0` if `song.mood == user.favorite_mood`
+3. Add numeric similarity points (reward closeness to user targets):
+  - `energy_similarity = 1 - abs(song.energy - user.target_energy)`
+  - `valence_similarity = 1 - abs(song.valence - user.target_valence)`
+  - `danceability_similarity = 1 - abs(song.danceability - user.target_danceability)`
+  - `acousticness_similarity = 1 - abs(song.acousticness - user.target_acousticness)`
+  - `tempo_similarity = 1 - (abs(song.tempo_bpm - user.target_tempo_bpm) / 120)`
+4. Apply numeric weights and add to score:
+  - `+1.2 * energy_similarity`
+  - `+0.9 * valence_similarity`
+  - `+0.7 * danceability_similarity`
+  - `+0.7 * acousticness_similarity`
+  - `+0.5 * tempo_similarity`
+5. Store `(song, score, explanation)` for every song.
+6. Sort all songs by score descending and return top `k` recommendations.
+
+### Potential Biases To Watch
+
+- This system might over-prioritize mood and genre labels, missing songs with a great sonic match but a different label.
+- It can favor songs near common target ranges (for example mid-tempo, mid-energy) and under-recommend outliers.
+- Because the catalog is small, recommendations may repeat similar artists or styles and reduce discovery.
+- Hand-chosen weights encode subjective taste assumptions and may not generalize to all listeners.
+
+### Recommendation Flowchart
+
+```mermaid
+flowchart LR
+  A[Input: User Preferences] --> B[Load songs from CSV]
+  B --> C[Loop through each song]
+  C --> D[Compute song score]
+  D --> D1[Genre match points]
+  D --> D2[Mood match points]
+  D --> D3[Numeric similarity points\nenergy, tempo, valence,\ndanceability, acousticness]
+  D1 --> E[Total score for this song]
+  D2 --> E
+  D3 --> E
+  E --> F{More songs left?}
+  F -- Yes --> C
+  F -- No --> G[Sort all songs by score]
+  G --> H[Take Top K songs]
+  H --> I[Output ranked recommendations]
+```
+
 ---
 
 ## Getting Started
@@ -89,6 +139,21 @@ You can add more tests in `tests/test_recommender.py`.
 ---
 
 ## Experiments You Tried
+
+### Terminal Output Screenshot
+
+After running `python3 -m src.main`, add a screenshot of your terminal output here that shows:
+
+- song titles
+- final scores
+- reasons for each recommendation
+
+
+Example markdown to use once your screenshot is saved in the repo:
+
+```markdown
+![Recommendation output screenshot](screenshot.png)
+```
 
 Use this section to document the experiments you ran. For example:
 
