@@ -77,8 +77,8 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     score = 0.0
     reasons: List[str] = []
 
-    # Finalized categorical weights from the algorithm recipe.
-    genre_points = 1.5
+    # Experiment: reduce genre influence and increase energy influence.
+    genre_points = 0.75
     mood_points = 2.0
 
     favorite_genre = user_prefs.get("favorite_genre", user_prefs.get("genre"))
@@ -115,7 +115,7 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
         "energy",
         user_prefs.get("target_energy", user_prefs.get("energy")),
         song.get("energy"),
-        weight=1.2,
+        weight=2.4,
     )
     score += similarity_points(
         "valence",
