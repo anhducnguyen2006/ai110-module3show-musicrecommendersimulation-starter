@@ -19,11 +19,33 @@ Replace this paragraph with your own summary of what your version does.
 
 Explain your design in plain language.
 
+Real world recommenders usually work in two steps: first they generate a set of likely candidates from a huge catalog, then they rank those items using signals like past plays, skips, likes, recency, and session context. My version is a smaller, transparent simulation of that idea. It prioritizes vibe matching over popularity by scoring songs based on how close they are to a user profile across mood, genre, energy, valence, tempo, danceability, and acousticness, then recommending the top scoring songs.
+
 Some prompts to answer:
 
 - What features does each `Song` use in your system
   - For example: genre, mood, energy, tempo
+- `Song` features used in this simulation:
+  - `id` (unique identifier)
+  - `title`
+  - `artist`
+  - `genre`
+  - `mood`
+  - `energy`
+  - `tempo_bpm`
+  - `valence`
+  - `danceability`
+  - `acousticness`
 - What information does your `UserProfile` store
+- `UserProfile` fields used in this simulation:
+  - `preferred_genres` (one or more genres)
+  - `preferred_moods` (one or more moods)
+  - `target_energy` (0 to 1)
+  - `target_tempo_bpm` (numeric target)
+  - `target_valence` (0 to 1)
+  - `target_danceability` (0 to 1)
+  - `target_acousticness` (0 to 1)
+  - optional weights for each feature so users can prioritize what matters most
 - How does your `Recommender` compute a score for each song
 - How do you choose which songs to recommend
 
